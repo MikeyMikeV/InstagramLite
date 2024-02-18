@@ -1,0 +1,59 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/css/style.css">
+    <script type="text/javascript"
+        src="//code.jquery.com/jquery-1.9.1.js">
+    </script>
+    <link rel="stylesheet" type="text/css" href="/css/result-light.css">
+    <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <title>Document</title>
+</head>
+<body>
+    <header id="block">
+        <div class="header-logo" id="block">
+            <a href="{% url 'home_page' %}"><img src="/static/images/logo.png" alt=""></a>
+        </div>
+        <div class="header-search" id="block">
+            <input type="search" style="width: 580px; margin: 20px; float: left;">
+            <button type="submit" style="float: left; margin-top: 20px;">Search</button>
+        </div>
+        <div class="header-navbar" id="block">
+            <div class="nav-bar-button" id="block">
+
+            </div>
+            <div class="nav-bar-button" id="block">
+
+            </div>
+            <div class="nav-bar-button" id="block">
+
+            </div>
+            <div class="nav-bar-button" id="block">
+
+            </div>
+        </div>
+        <div class="header-profile" id="block">
+
+        </div>
+    </header>
+    {% block content %}
+    {% endblock content %}
+    <div class="bar"  id='block'>
+        <p><a href="{% url 'post_new' %}">New Post</a></p>
+        <p><a href="{% url 'home_page' %}">Home Page</a></p>
+        {% if user.is_authenticated %}
+        <p><a href="{% url 'profile_detail' uid=user.pk %}">Profile Page</a></p>
+        <p><a href="{% url 'logout' %}?next={{request.path}}">Log Out</a></p>
+        <p><img src="/media/{{profile.profile_pic}}" alt="" style="height: 100px; width: 100px;"></p>
+        {% else %}
+        <p><a href="{% url 'login'%}?next={{request.path}}">Login</a></p>
+        <p><a href="{% url 'create_user'%}">Register</a></p>
+        {% endif %}
+    </div>
+</body>
+</html>

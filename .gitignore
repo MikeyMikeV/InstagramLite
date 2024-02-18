@@ -1,0 +1,5 @@
+/.env
+/myvenv
+/posts/migrations
+/accounts/migrations
+/profiles/migrations

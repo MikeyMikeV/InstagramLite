@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% load template_tags %}
+<div class="post_list_container">
+    {{ profile.pk|json_script:"profileID" }}
+    {% for post in posts %}
+    <a href="{% url 'post_detail' pid=post.pk %}">
+        <div class="container post_card">
+            <!--Bootstrap card with slider class-->
+            <div class="post_author">
+                <img src="/media/{{post.author.profile_pic}}" alt="">
+                <p>{{post.author.tag}}</p>
+            </div>
+            <div id="carousel-demo"
+                class="carousel slide image_container"
+                data-ride="carousel">
+                <div class="carousel-inner image_container">
+                    {% for post_att in post.attachments.all %}
+                    <div class="item mySlides {{post.pk}}">
+                        <img src="/media/{{post_att.image}}" alt="">
+                    </div>
+                    {% endfor %}
+                </div>
+                <!--slider control for card-->
+                <a class="left carousel-control"
+                href="#carousel-demo"
+                data-slide="prev">
+                    <span class="glyphicon glyphicon-chevron-left">
+                </span>
+                </a>
+                <a class="right carousel-control"
+                href="#carousel-demo"
+                data-slide="next">
+                    <span class="glyphicon glyphicon-chevron-right">
+                </span>
+                </a>
+            </div>
+            <script>
+                let images = document.getElementsByClassName('{{post.pk}}')
+                images[0].className += ' active'
+            </script>
+            <div class="buttons">
+
+                <div class='button' id='like'>
+                    {% if user.is_authenticated %}
+                        {% if profile|has_liked:post %}
+                        <img src="/static/images/SVG/red-heart-icon.svg" alt="" id='postLike' class = 'post_like1'>
+                        {% else %}
+                        <img src="/static/images/SVG/heart-thin-icon.svg" alt="" id="postLike" class="post_like0">
+                        {% endif %}
+                    {% else %}
+                        <a href="{% url 'login'%}?next={{ request.path }}"><img src="/static/images/SVG/heart-thin-icon.svg" alt=""></a>
+                    {% endif %}
+                    <p style="float:left; font-size: x-large; margin-top: 15px;">{{post.likes.count}}</p>
+                </div>
+        
+                <div class="com_bar">
+                    <div class="com_reply">
+                        <div class="button" id="com_reply">
+                            <a href=""><img src="/static/images/SVG/heart-thin-icon.svg" alt=""></a>
+                        </div>
+                    </div>
+                    <div class="com_like">
+                        <div class="button" id="com_like_{{comment.pk}}" name = 'comment_like'>
+                            <a href=""><img src="/static/images/SVG/heart-thin-icon.svg" alt=""></a>
+                        </div>
+                    </div>
+                    <div class="com_like">
+                        <div class="button" id="com_like_{{comment.pk}}" name = 'comment_like'>
+                            <a href=""><img src="/static/images/SVG/heart-thin-icon.svg" alt=""></a>
+                        </div>
+                    </div>    
+                </div>
+            </div>
+        </div>
+    </a>
+    {% endfor %}
+</div>
+
+{% comment %} <script>
+    let slideIndex = 1;
+    showSlides(slideIndex);
+
+    // Next/previous controls
+    function plusSlides(n) {
+        showSlides(slideIndex += n);
+    }
+
+    // Thumbnail image controls
+    function currentSlide(n) {
+        showSlides(slideIndex = n);
+    }
+
+    function showSlides(n) {
+        let i;
+        let slides = document.getElementsByClassName("mySlides");
+        if (n > slides.length) {slideIndex = 1}
+            if (n < 1) {slideIndex = slides.length}
+                for (i = 0; i < slides.length; i++) {
+                    slides[i].style.display = "none";
+                }
+        for (i = 0; i < dots.length; i++) {
+            dots[i].className = dots[i].className.replace(" active", "");
+        }
+        slides[slideIndex-1].style.display = "block";
+        dots[slideIndex-1].className += " active";
+    } {% endcomment %}
+<script src="/static/scripts/home_page.js"></script>
+{% endblock content %}

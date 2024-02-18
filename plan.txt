@@ -1,0 +1,23 @@
+2. Instagram
+    User
+    Profile
+        user = fk(User)
+        image 
+        tag
+    Post
+        author
+        content
+        text
+        likes
+        share
+        comments
+    ContentAttachments
+        image
+    Likes
+        user = fk
+    Comments
+        user = fk
+        content = text
+    *Reels
+    *Stories
+    ~messenger ASGI

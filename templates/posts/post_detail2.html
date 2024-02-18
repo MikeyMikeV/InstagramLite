@@ -1,0 +1,129 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% load template_tags %}
+<div class="container post_card">
+    <!--Bootstrap card with slider class-->
+    <div class="post_author">
+        <img src="/media/{{post.author.profile_pic}}" alt="">
+        <p>{{post.author.tag}}</p>
+    </div>
+    <div id="carousel-demo"
+        class="carousel slide image_container"
+        data-ride="carousel">
+        <div class="carousel-inner image_container">
+            {% for post_att in post.attachments.all %}
+            <div class="item mySlides">
+                <img src="/media/{{post_att.image}}" alt="">
+            </div>
+            {% endfor %}
+        </div>
+        <!--slider control for card-->
+        <a class="left carousel-control"
+        href="#carousel-demo"
+        data-slide="prev">
+            <span class="glyphicon glyphicon-chevron-left">
+        </span>
+        </a>
+        <a class="right carousel-control"
+        href="#carousel-demo"
+        data-slide="next">
+            <span class="glyphicon glyphicon-chevron-right">
+        </span>
+        </a>
+    </div>
+    <script>
+        let images = document.getElementsByClassName('item')
+        images[0].className += ' active'
+    </script>
+    <div class="buttons">
+
+        <div class="button" id="like">
+            {% if user.is_authenticated %}
+                {% if profile|has_liked:post %}
+                <img src="/static/images/SVG/red-heart-icon.svg" alt="" id="postLike" class="post_like1">
+                {% else %}
+                <img src="/static/images/SVG/heart-thin-icon.svg" alt="" id="postLike" class="post_like0">
+                {% endif %}
+            {% else %}
+                <a href="{% url 'login'%}?next={{ request.path }}"><img src="/static/images/SVG/heart-thin-icon.svg" alt=""></a>
+            {% endif %}
+            <p style="float:left; font-size: x-large; margin-top: 15px;" id="post_like_counter">{{post.likes.count}}</p>
+        </div>
+
+        {% load social_share %}
+        <div class="button" id="comment">
+            <a href=""><img src="/static/images/SVG/heart-thin-icon.svg" alt=""></a>
+        </div>
+        {% post_to_telegram "<p style='color: green;'>Telegram</p>" request.path %}
+        <div class="button" id="save">
+            <a href=""><img src="/static/images/SVG/heart-thin-icon.svg" alt=""></a>
+        </div>
+    </div>
+    <div class="top_comment">
+
+    </div>
+</div>
+<div class="comment_sect">
+    <div class="comment_input">
+        <input name="" id="commentInput">
+        <button type="button" id="commentSend">Comment</button>
+    </div>
+    <div class="comment_list" id="comment_list">
+        {% for comment in post.comments.all %}
+        <div class="comment_card" id="comment_{{comment.pk}}">
+            <div class="top">
+                <div class="com_pp">
+                    <img src="/media/{{comment.author.profile_pic}}" alt="">
+                </div>
+                <div class="com_name">
+                    <p>{{comment.author.tag}}</p>
+                </div>
+                <div class="com_edit">
+                </div>
+            </div>
+            <div class="middle">
+                <div class="text">{{comment.text}}</div>
+            </div>
+            <div class="bottom">
+                <div class="com_bar">
+                    <div class="com_like">
+                    {% if user.is_authenticated %}
+                        {% if profile|has_liked:comment %}
+                        <div class="comment_like_1" id="com_like_{{comment.pk}}" name = 'comment_like'>
+                            <img src="/static/images/SVG/red-heart-icon.svg" alt="">
+                            <p style="float:left; font-size: x-large; margin-top: 15px;" id="comment_like_counter">{{comment.likes.count}}</p>
+                        </div>
+                        {% else %}
+                        <div class="comment_like_0" id="com_like_{{comment.pk}}" name = 'comment_like'>
+                            <img src="/static/images/SVG/heart-thin-icon.svg" alt="">
+                            <p style="float:left; font-size: x-large; margin-top: 15px;" id="comment_like_counter">{{comment.likes.count}}</p>
+                        </div>
+                        {% endif %}
+                    {% else %}
+                        <a href="{% url 'login'%}?next={{ request.path }}">
+                            <div class="comment_like_0" id="com_like_{{comment.pk}}" name = 'comment_like'>
+                                <img src="/static/images/SVG/heart-thin-icon.svg" alt="">
+                                {% comment %} <p style="float:left; font-size: x-large; margin-top: 15px;" id="comment_like_counter">{{comment.likes.count}}</p> {% endcomment %}
+                            </div>
+                        </a>
+                    {% endif %}
+                    </div>
+                    <div class="com_reply">
+                        <div class="button" id="com_reply_{{comment.pk}}" name = 'comment_reply'>
+                            <img src="/static/images/SVG/reply.svg" alt="">
+                        </div>
+                    </div>
+                </div>
+                <div class="com_timestamp">
+                    <p>{{comment.timestamp}}</p>
+                </div>
+            </div>
+        </div>
+        {% endfor %} 
+    </div>
+</div>
+{{ post.pk|json_script:"postID" }}
+<script src="/static/scripts/post_detail.js"></script>
+
+{% endblock content %}

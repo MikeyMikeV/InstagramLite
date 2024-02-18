@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="post_list_container">
+    {% for post in posts %}
+    <a href="{% url 'post_detail' pid=post.pk %}">
+        <div class="post_card">
+            <div class="post_author" id='block'>
+                <img src="/media/{{post.author.profile_pic}}" alt="">
+                <p>{{post.author.tag}}</p>
+            </div>
+            <div class="image_container" id='block'>
+                {% for post_att in post.attachments %}
+                <div class="mySlides fade">
+                    <img src="/media/{{post_att.image}}" alt="">
+                </div>
+                {% endfor %}
+            </div>
+            <div class="top_comment" id='block'>
+    
+            </div>
+        </div>
+    </a>
+    {% endfor %}
+</div>
+
+<script>
+    let slideIndex = 1;
+    showSlides(slideIndex);
+
+    // Next/previous controls
+    function plusSlides(n) {
+        showSlides(slideIndex += n);
+    }
+
+    // Thumbnail image controls
+    function currentSlide(n) {
+        showSlides(slideIndex = n);
+    }
+
+    function showSlides(n) {
+        let i;
+        let slides = document.getElementsByClassName("mySlides");
+        if (n > slides.length) {slideIndex = 1}
+            if (n < 1) {slideIndex = slides.length}
+                for (i = 0; i < slides.length; i++) {
+                    slides[i].style.display = "none";
+                }
+        for (i = 0; i < dots.length; i++) {
+            dots[i].className = dots[i].className.replace(" active", "");
+        }
+        slides[slideIndex-1].style.display = "block";
+        dots[slideIndex-1].className += " active";
+    }
+</script>
+{% endblock content %}

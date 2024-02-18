@@ -1,0 +1,12 @@
+{% extends 'base.html '%}
+{% block content %}
+    <div style="background-color: aliceblue; margin-top: 20px;" >
+        <p>Logging In</p>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{form.as_p}}
+            <button type="submit">Save</button>
+        </form>
+        <p>Don't have an account? <a href="{% url 'create_user' %}">SignUp</a></p>
+    </div>
+{% endblock %}

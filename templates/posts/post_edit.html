@@ -1,0 +1,19 @@
+{% extends 'base.html '%}
+{% block content %}
+    <div style="background-color: aliceblue; margin-top: 20px;" >
+        <p>Editing Post</p>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{form.as_p}}
+            <button type="submit">Save</button>
+            
+            <p>Delete Selected</p>
+            {% for att in post_att %}
+            <img src="/media/{{att.image}}" alt="" style="width: 100px; height: 100px; object-fit: cover;">
+            <div>
+                <input type="checkbox" value="{{att.pk}}" id="{{att.pk}}" name="attachments">
+            </div>
+            {% endfor %}
+        </form>
+    </div>
+{% endblock %}

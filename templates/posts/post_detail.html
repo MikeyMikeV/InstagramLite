@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% load template_tags %}
+<div class="post_card">
+    <div class="post_author">
+        <img src="/media/{{post.author.profile_pic}}" alt="">
+        <p>{{post.author.tag}}</p>
+    </div>
+    <div class="image_container">
+        {% for post_att in post.attachments %}
+        <div class="mySlides fade">
+            <img src="/media/{{post_att.image}}" alt="">
+        </div>
+        {% endfor %}
+        <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
+        <a class="next" onclick="plusSlides(1)">&#10095;</a>
+    </div>
+    <div class="buttons">
+
+        <div class="button" id="like">
+            {% if profile|has_liked:post and user.is_authenticated %}
+            <a href="{% url 'like_post' pfid=profile.pk pid=post.pk%}"><img src="/static/images/SVG/red-heart-icon.svg" alt=""></a>
+            {% else %}
+            <a href="{% url 'like_post' pfid=profile.id pid=post.pk%}"><img src="/static/images/SVG/heart-thin-icon.svg" alt=""></a>
+            {% endif %}
+            <p style="float:left; font-size: x-large; margin-top: 15px;">{{post.likes.count}}</p>
+        </div>
+
+        <div class="button" id="comment">
+            <a href=""><img src="/static/images/SVG/heart-thin-icon.svg" alt=""></a>
+        </div>
+        <div class="button" id="share">
+            <a href=""><img src="/static/images/SVG/heart-thin-icon.svg" alt=""></a>
+        </div>
+        <div class="button" id="save">
+            <a href=""><img src="/static/images/SVG/heart-thin-icon.svg" alt=""></a>
+        </div>
+    </div>
+    {% comment %} {% if user.pk == post.author.user.pk %}
+    <div>
+        <a href="{% url 'post_edit' pid=post.pk %}">Edit</a>
+    </div>
+    {% endif %} {% endcomment %}
+    <div class="top_comment">
+
+    </div>
+</div>
+<div class="comment_sect">
+    <div class="comment_input">
+        <input name="" id="commentInput">
+        <button type="button" id="commentSend">Comment</button>
+    </div>
+    <div class="comment_list" id="comment_list">
+       {% for comment in post.comments.all %}
+        <div class="comment_card">
+            <div class="top">
+                <div class="com_pp">
+                    <img src="/media/{{comment.author.profile_pic}}" alt="">
+                </div>
+                <div class="com_name">
+                    <p>{{comment.author.user.username}}</p>
+                </div>
+                <div class="com_edit">
+
+                </div>
+            </div>
+            <div class="middle">
+                <div class="text">{{comment.text}}</div>
+            </div>
+            <div class="bottom">
+                <div class="com_timestamp">
+                    {{comment.timestamp}}
+                </div>
+                <div class="com_bar">
+                    <div class="com_reply">
+
+                    </div>
+                    <div class="com_like">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+       {% endfor %} 
+    </div>
+    {{ post.pk|json_script:"postID" }}
+</div>
+<script src="/static/scripts/post_detail.js"></script>
+
+
+<script>
+    let slideIndex = 1;
+    showSlides(slideIndex);
+
+    // Next/previous controls
+    function plusSlides(n) {
+        showSlides(slideIndex += n);
+    }
+
+    // Thumbnail image controls
+    function currentSlide(n) {
+        showSlides(slideIndex = n);
+    }
+
+    function showSlides(n) {
+        let i;
+        let slides = document.getElementsByClassName("mySlides");
+        if (n > slides.length) {slideIndex = 1}
+        if (n < 1) {slideIndex = slides.length}
+        for (i = 0; i < slides.length; i++) {
+            slides[i].style.display = "none";
+        }
+        slides[slideIndex-1].style.display = "block";
+        dots[slideIndex-1].className += " active";
+    }
+</script>
+
+{% endblock content %}
